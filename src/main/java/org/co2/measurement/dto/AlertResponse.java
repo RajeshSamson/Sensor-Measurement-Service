@@ -6,6 +6,9 @@ import org.co2.measurement.model.Alerts;
 
 import java.util.List;
 
+/**
+ * The Alerts Response JSON holder class.
+ */
 @Data
 @AllArgsConstructor
 public class AlertResponse {

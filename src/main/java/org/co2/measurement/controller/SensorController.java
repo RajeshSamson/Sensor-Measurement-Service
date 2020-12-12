@@ -19,6 +19,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 
+/**
+ * This is the controller class which exposes the Application Rest endpoint.
+ */
 @RestController
 @RequestMapping("/api/v1")
 @RequiredArgsConstructor

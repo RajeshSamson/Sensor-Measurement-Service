@@ -11,6 +11,9 @@ import org.springframework.stereotype.Service;
 
 import static org.springframework.context.i18n.LocaleContextHolder.getLocale;
 
+/**
+ * The service class for handling the business logic for the status model.
+ */
 @Service
 @RequiredArgsConstructor
 public class StatusService {
@@ -19,6 +22,12 @@ public class StatusService {
 
     private final ReloadableResourceBundleMessageSource messageSource;
 
+    /**
+     * Retrieve the status for the given sensor unique identifier
+     *
+     * @param uuid - The sensor unique identifier
+     * @return - Returns {@code ResponseEntity<SensorStatusResponse>}
+     */
     public ResponseEntity<?> getSensorStatus(long uuid) {
         Status status = statusRepository.findByUuid(uuid);
         if (status == null) {

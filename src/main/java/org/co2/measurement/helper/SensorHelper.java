@@ -1,13 +1,17 @@
 package org.co2.measurement.helper;
 
-import lombok.extern.log4j.Log4j2;
-
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-@Log4j2
+/**
+ * The helper class for the sensor measurement application.
+ */
 public class SensorHelper {
 
+    /**
+     * Method to convert the given date {@code String} to {@code LocalDateTime}
+     * @return
+     */
     public static LocalDateTime getLocalDateTime() {
         String formattedCurrentDate = getTime();
         return LocalDateTime.parse(formattedCurrentDate);

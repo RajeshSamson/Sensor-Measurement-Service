@@ -10,6 +10,9 @@ import org.springframework.stereotype.Component;
 
 import static org.co2.measurement.helper.SensorHelper.getTime;
 
+/**
+ * This is a helper class which load the demo data during the application start up.
+ */
 @Component
 @RequiredArgsConstructor
 @Profile("dev")

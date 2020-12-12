@@ -9,7 +9,9 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
-
+/**
+ * The Sensor Request JSON holder class.
+ */
 @Data
 @AllArgsConstructor
 public class SensorRequest implements Serializable {

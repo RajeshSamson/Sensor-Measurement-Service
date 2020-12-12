@@ -17,6 +17,9 @@ import java.util.stream.IntStream;
 
 import static org.springframework.context.i18n.LocaleContextHolder.getLocale;
 
+/**
+ * The service class for handling the business logic for the Alert model.
+ */
 @Service
 @RequiredArgsConstructor
 public class AlertService {
@@ -27,6 +30,12 @@ public class AlertService {
 
     private final ReloadableResourceBundleMessageSource messageSource;
 
+    /**
+     * Retrieve the alert status for the given sensor unique identifier
+     *
+     * @param uuid - The sensor unique identifier
+     * @return - Returns {@code ResponseEntity<AlertResponse>}
+     */
     public ResponseEntity<?> getAlertsStatus(long uuid) {
         generateAlertsReport(uuid);
         List<Alerts> alerts = alertsRepository.findAllByUuid(uuid);

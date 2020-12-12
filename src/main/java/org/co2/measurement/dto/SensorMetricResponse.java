@@ -4,6 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * The Sensor Metrics Response JSON holder class.
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
