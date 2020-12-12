@@ -30,8 +30,9 @@ You can run the docker image using below command
 ```shell script
   $ docker run -it -p 8080:8080 --name=Sensor-Measurement-Application co2-measurement:0.0.1-SNAPSHOT
 ```
-Example:
-![img_1.png](img_1.png)
+Example: Command to run the created docker image.
+
+![img_2.png](img_2.png)
 
 In case if you do not know the image name use the ```$docker images``` command to list all the docker images
 
