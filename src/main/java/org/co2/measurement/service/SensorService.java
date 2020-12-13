@@ -28,7 +28,7 @@ import static org.co2.measurement.model.Levels.WARN;
 @Service
 @RequiredArgsConstructor
 @Log4j2
-public class SensorService {
+public class SensorService implements ISensorService {
 
     private final SensorRepository sensorRepository;
 
@@ -41,6 +41,7 @@ public class SensorService {
      * @param request - The {@code SensorRequest} request body
      * @return - Returns {@code ResponseEntity} of type {@code Sensor}
      */
+    @Override
     public ResponseEntity<?> saveMeasurement(long uuid, SensorRequest request) {
         Sensor newMeasurement = new Sensor(uuid, request.getCo2(), LocalDateTime.parse(request.getTime()));
         this.sensorRepository.save(newMeasurement);
@@ -54,6 +55,7 @@ public class SensorService {
      * @param uuid - The sensor uuid value.
      * @return Returns {@code ResponseEntity} of type {@code SensorMetricResponse}
      */
+    @Override
     public ResponseEntity<?> findSensorMetrics(long uuid) {
         LocalDateTime localDateTime = getLocalDateTime();
         List<Sensor> sensorsRecords = this.sensorRepository.findAllByUuidAndTimeBetween(uuid, localDateTime.minusDays(30), localDateTime);
