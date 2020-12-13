@@ -1,6 +1,7 @@
 package org.co2.measurement.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.co2.measurement.dto.AlertResponse;
 import org.co2.measurement.dto.SensorMetricResponse;
 import org.co2.measurement.dto.SensorRequest;
 import org.co2.measurement.dto.SensorStatusResponse;
@@ -91,6 +92,23 @@ public class SensorControllerTest {
 
         SensorMetricResponse response = objectMapper.readValue(result.getResponse().getContentAsString(), SensorMetricResponse.class);
         assertThat(response.getMaxLast30Days()).isEqualTo(2004);
+    }
+
+    @Test
+    void testFindSensorAlerts() throws Exception {
+        long uuid = UUID.randomUUID().getMostSignificantBits() & Long.MAX_VALUE;
+        long[] sensorRecords = {2001, 2003, 2004, 1900, 1901, 1902, 2000, 2030, 2005};
+        for (long sensorRecord : sensorRecords) {
+            sensorRepository.save(new Sensor(uuid, sensorRecord, SensorHelper.getLocalDateTime()));
+            Thread.sleep(1000);
+        }
+
+        MvcResult result = mockMvc.perform(get("/api/v1/sensors/{uuid}/alerts", uuid)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk()).andReturn();
+
+        AlertResponse response = objectMapper.readValue(result.getResponse().getContentAsString(), AlertResponse.class);
+        assertThat(response.getResponse().size()).isEqualTo(2);
     }
 }
 
