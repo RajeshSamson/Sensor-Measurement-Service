@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.co2.measurement.model.Alerts;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -11,7 +12,7 @@ import java.util.List;
  */
 @Data
 @AllArgsConstructor
-public class AlertResponse {
+public class AlertResponse implements Serializable {
 
     List<Alerts> response;
 

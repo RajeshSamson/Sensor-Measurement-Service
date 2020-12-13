@@ -1,15 +1,14 @@
 package org.co2.measurement.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.validator.GenericValidator;
 import org.co2.measurement.dto.SensorRequest;
+import org.co2.measurement.helper.SensorHelper;
 import org.co2.measurement.service.AlertService;
 import org.co2.measurement.service.SensorService;
 import org.co2.measurement.service.StatusService;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -45,7 +44,7 @@ public class SensorController {
     @PostMapping("/sensors/{uuid}/measurements")
     public ResponseEntity<?> saveSensorMeasurements(@PathVariable("uuid") long uuid,
                                                     @Valid @RequestBody SensorRequest request) {
-        boolean isValid = GenericValidator.isDate(request.getTime(), "yyyy-MM-dd'T'HH:mm:ss", true);
+        boolean isValid = SensorHelper.validateDateFormat(request.getTime());
         if (!isValid) {
             throw new IllegalArgumentException(messageSource.getMessage("error.invalid.date", null, LocaleContextHolder.getLocale()));
         }

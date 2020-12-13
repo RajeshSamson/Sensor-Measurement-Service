@@ -2,6 +2,7 @@ package org.co2.measurement.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.co2.measurement.dto.SensorRequest;
+import org.co2.measurement.dto.SensorStatusResponse;
 import org.co2.measurement.model.Sensor;
 import org.co2.measurement.model.Status;
 import org.co2.measurement.repository.SensorRepository;
@@ -15,6 +16,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
+
+import java.util.UUID;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -47,22 +51,27 @@ public class SensorControllerTest {
 
     @Test
     void testSaveSensorMeasurements() throws Exception {
-        mockMvc.perform(post("/api/v1/sensors/{uuid}/measurements/", 1001)
+        long uuid = UUID.randomUUID().getMostSignificantBits() & Long.MAX_VALUE;
+        mockMvc.perform(post("/api/v1/sensors/{uuid}/measurements/", uuid)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(sensorRequest)))
                 .andExpect(status().isCreated());
 
-        Sensor sensor = sensorRepository.findByUuid(1001);
-        assertThat(sensor.getUuid()).isEqualTo(1001);
+        Sensor sensor = sensorRepository.findByUuid(uuid);
+        assertThat(sensor.getUuid()).isEqualTo(uuid);
         assertThat(sensor.getCo2()).isEqualTo(1900);
     }
 
     @Test
     void testGetSensorStatus() throws Exception {
-        statusRepository.save(new Status(1001,"OK"));
-        mockMvc.perform(get("/api/v1/sensors/{uuid}/", 1001)
+        long uuid = UUID.randomUUID().getMostSignificantBits() & Long.MAX_VALUE;
+        statusRepository.save(new Status(uuid, "ALERT"));
+        MvcResult result = mockMvc.perform(get("/api/v1/sensors/{uuid}/", uuid)
                 .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk()).andReturn();
+        String content = result.getResponse().getContentAsString();
+        SensorStatusResponse sensorStatusResponse = objectMapper.readValue(content, SensorStatusResponse.class);
+        assertThat(sensorStatusResponse.getStatus()).isEqualTo("ALERT");
     }
 }
 
