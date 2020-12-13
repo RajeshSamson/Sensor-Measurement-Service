@@ -1,8 +1,10 @@
 package org.co2.measurement.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.co2.measurement.dto.SensorMetricResponse;
 import org.co2.measurement.dto.SensorRequest;
 import org.co2.measurement.dto.SensorStatusResponse;
+import org.co2.measurement.helper.SensorHelper;
 import org.co2.measurement.model.Sensor;
 import org.co2.measurement.model.Status;
 import org.co2.measurement.repository.SensorRepository;
@@ -72,6 +74,23 @@ public class SensorControllerTest {
         String content = result.getResponse().getContentAsString();
         SensorStatusResponse sensorStatusResponse = objectMapper.readValue(content, SensorStatusResponse.class);
         assertThat(sensorStatusResponse.getStatus()).isEqualTo("ALERT");
+    }
+
+    @Test
+    void testFindSensorMetrics() throws Exception {
+        long uuid = UUID.randomUUID().getMostSignificantBits() & Long.MAX_VALUE;
+        long[] sensorRecords = {2001, 2003, 2004};
+        for (long sensorRecord : sensorRecords) {
+            sensorRepository.save(new Sensor(uuid, sensorRecord, SensorHelper.getLocalDateTime()));
+            Thread.sleep(1000);
+        }
+
+        MvcResult result = mockMvc.perform(get("/api/v1/sensors/{uuid}/metrics", uuid)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk()).andReturn();
+
+        SensorMetricResponse response = objectMapper.readValue(result.getResponse().getContentAsString(), SensorMetricResponse.class);
+        assertThat(response.getMaxLast30Days()).isEqualTo(2004);
     }
 }
 
